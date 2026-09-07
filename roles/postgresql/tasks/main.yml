@@ -16,14 +16,14 @@
 
 - name: Veritabani kullanicisi olustur
   become_user: postgres
-  postgresql_user:
+  community.postgresql.postgresql_user:
     name: "{{ postgres_user }}"
     password: "{{ postgres_password }}"
     state: present
 
 - name: Veritabani olustur
   become_user: postgres
-  postgresql_db:
+  community.postgresql.postgresql_db:
     name: "{{ postgres_db }}"
     owner: "{{ postgres_user }}"
     state: present
