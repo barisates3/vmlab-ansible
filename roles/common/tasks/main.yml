@@ -16,7 +16,7 @@
     state: present
 
 - name: Zaman dilimini ayarla
-  timezone:
+  community.general.timezone:
     name: Europe/Istanbul
 
 - name: UFW kur
