@@ -1,0 +1,35 @@
+---
+- name: PostgreSQL paketlerini kur
+  apt:
+    name:
+      - postgresql
+      - postgresql-contrib
+      - python3-psycopg2
+    state: present
+    update_cache: yes
+
+- name: PostgreSQL servisini baslat
+  service:
+    name: postgresql
+    state: started
+    enabled: yes
+
+- name: Veritabani kullanicisi olustur
+  become_user: postgres
+  postgresql_user:
+    name: "{{ postgres_user }}"
+    password: "{{ postgres_password }}"
+    state: present
+
+- name: Veritabani olustur
+  become_user: postgres
+  postgresql_db:
+    name: "{{ postgres_db }}"
+    owner: "{{ postgres_user }}"
+    state: present
+
+- name: PostgreSQL portuna izin ver
+  ufw:
+    rule: allow
+    port: "{{ postgres_port }}"
+    proto: tcp

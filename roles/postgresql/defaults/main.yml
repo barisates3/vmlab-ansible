@@ -1,0 +1,6 @@
+---
+postgres_version: "16"
+postgres_port: 5432
+postgres_db: appdb
+postgres_user: appuser
+postgres_password: "changeme123"

@@ -1,0 +1,7 @@
+---
+- name: Sunucuya Docker kur
+  hosts: servers
+  become: yes
+  roles:
+    - common
+    - docker

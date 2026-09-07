@@ -1,0 +1,7 @@
+---
+- name: Sunucuya PostgreSQL kur
+  hosts: servers
+  become: yes
+  roles:
+    - common
+    - postgresql

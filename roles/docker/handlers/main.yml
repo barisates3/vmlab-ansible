@@ -1,0 +1,5 @@
+---
+- name: docker servisini yeniden baslat
+  service:
+    name: docker
+    state: restarted

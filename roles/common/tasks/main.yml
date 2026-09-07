@@ -1,0 +1,37 @@
+---
+- name: Paket listesini guncelle
+  apt:
+    update_cache: yes
+    cache_valid_time: 3600
+
+- name: Temel araclari kur
+  apt:
+    name:
+      - curl
+      - git
+      - vim
+      - htop
+      - net-tools
+      - acl
+    state: present
+
+- name: Zaman dilimini ayarla
+  timezone:
+    name: Europe/Istanbul
+
+- name: UFW kur
+  apt:
+    name: ufw
+    state: present
+
+- name: SSH portuna izin ver
+  ufw:
+    rule: allow
+    port: '22'
+    proto: tcp
+
+- name: UFW aktif et
+  ufw:
+    state: enabled
+    policy: deny
+    direction: incoming

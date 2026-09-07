@@ -1,0 +1,7 @@
+---
+- name: Sunucuya nginx kur
+  hosts: servers
+  become: yes
+  roles:
+    - common
+    - nginx

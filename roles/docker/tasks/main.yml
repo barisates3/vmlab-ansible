@@ -1,0 +1,48 @@
+---
+- name: Gerekli paketleri kur
+  apt:
+    name:
+      - ca-certificates
+      - gnupg
+    state: present
+
+- name: Docker GPG anahtari icin dizin olustur
+  file:
+    path: /etc/apt/keyrings
+    state: directory
+    mode: '0755'
+
+- name: Docker GPG anahtarini indir
+  get_url:
+    url: https://download.docker.com/linux/ubuntu/gpg
+    dest: /etc/apt/keyrings/docker.asc
+    mode: '0644'
+
+- name: Docker deposunu ekle
+  apt_repository:
+    repo: "deb [arch=amd64 signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+    state: present
+    filename: docker
+
+- name: Docker paketlerini kur
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+      - docker-compose-plugin
+    state: present
+    update_cache: yes
+  notify: docker servisini yeniden baslat
+
+- name: Docker servisini baslat ve aktif et
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Kullaniciyi docker grubuna ekle
+  user:
+    name: "{{ ansible_user }}"
+    groups: docker
+    append: yes

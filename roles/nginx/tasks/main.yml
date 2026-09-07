@@ -1,0 +1,35 @@
+---
+- name: nginx kur
+  apt:
+    name: nginx
+    state: present
+    update_cache: yes
+
+- name: Site yapilandirmasini olustur
+  template:
+    src: site.conf.j2
+    dest: /etc/nginx/sites-available/default
+    mode: '0644'
+  notify: nginx yeniden yukle
+
+- name: Test sayfasi olustur
+  copy:
+    content: |
+      <html><body>
+      <h1>{{ inventory_hostname }}</h1>
+      <p>Bu sunucu Ansible ile yapilandirildi.</p>
+      </body></html>
+    dest: "{{ nginx_root }}/index.html"
+    mode: '0644'
+
+- name: nginx servisini baslat
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: nginx portuna izin ver
+  ufw:
+    rule: allow
+    port: "{{ nginx_port }}"
+    proto: tcp
