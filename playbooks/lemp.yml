@@ -1,0 +1,7 @@
+---
+- name: Sunucuya LEMP yigini kur
+  hosts: servers
+  become: yes
+  roles:
+    - common
+    - lemp

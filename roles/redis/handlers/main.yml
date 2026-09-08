@@ -1,0 +1,5 @@
+---
+- name: redis yeniden baslat
+  service:
+    name: redis-server
+    state: restarted

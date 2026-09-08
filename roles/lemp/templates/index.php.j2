@@ -1,0 +1,15 @@
+<?php
+$host = "{{ inventory_hostname }}";
+$db   = "{{ postgres_db | default('appdb') }}";
+$user = "{{ postgres_user | default('appuser') }}";
+$pass = "{{ postgres_password | default('changeme123') }}";
+
+echo "<h1>{$host}</h1>";
+echo "<p>PHP surumu: " . phpversion() . "</p>";
+
+try {
+    $pdo = new PDO("pgsql:host=localhost;dbname={$db}", $user, $pass);
+    echo "<p>Veritabani baglantisi: basarili ({$db})</p>";
+} catch (PDOException $e) {
+    echo "<p>Veritabani baglantisi: basarisiz</p>";
+}

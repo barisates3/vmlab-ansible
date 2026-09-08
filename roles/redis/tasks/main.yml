@@ -1,0 +1,27 @@
+---
+- name: Redis kur
+  apt:
+    name: redis-server
+    state: present
+    update_cache: yes
+
+- name: Redis yapilandirmasini olustur
+  template:
+    src: redis.conf.j2
+    dest: /etc/redis/redis.conf
+    owner: redis
+    group: redis
+    mode: '0640'
+  notify: redis yeniden baslat
+
+- name: Redis servisini baslat
+  service:
+    name: redis-server
+    state: started
+    enabled: yes
+
+- name: Redis portuna izin ver
+  ufw:
+    rule: allow
+    port: "{{ redis_port }}"
+    proto: tcp

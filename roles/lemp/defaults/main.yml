@@ -1,0 +1,4 @@
+---
+lemp_php_version: "8.3"
+lemp_site_root: /var/www/app
+lemp_port: 80

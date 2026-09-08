@@ -1,0 +1,19 @@
+bind {{ redis_bind }}
+port {{ redis_port }}
+protected-mode {{ 'no' if redis_password == '' else 'yes' }}
+{% if redis_password %}
+requirepass {{ redis_password }}
+{% endif %}
+
+maxmemory {{ redis_maxmemory }}
+maxmemory-policy {{ redis_maxmemory_policy }}
+
+daemonize yes
+supervised systemd
+pidfile /run/redis/redis-server.pid
+logfile /var/log/redis/redis-server.log
+dir /var/lib/redis
+
+save 900 1
+save 300 10
+save 60 10000

@@ -1,0 +1,7 @@
+---
+- name: Sunucuya Redis kur
+  hosts: servers
+  become: yes
+  roles:
+    - common
+    - redis

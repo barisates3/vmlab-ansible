@@ -1,0 +1,15 @@
+server {
+    listen {{ lemp_port }};
+    server_name _;
+    root {{ lemp_site_root }};
+    index index.php index.html;
+
+    location / {
+        try_files $uri $uri/ =404;
+    }
+
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/run/php/php{{ lemp_php_version }}-fpm.sock;
+    }
+}

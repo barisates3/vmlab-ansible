@@ -1,0 +1,39 @@
+---
+- name: PHP paketlerini kur
+  apt:
+    name:
+      - "php{{ lemp_php_version }}-fpm"
+      - "php{{ lemp_php_version }}-pgsql"
+      - "php{{ lemp_php_version }}-mbstring"
+      - "php{{ lemp_php_version }}-xml"
+    state: present
+    update_cache: yes
+
+- name: Uygulama dizinini olustur
+  file:
+    path: "{{ lemp_site_root }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Test sayfasini olustur
+  template:
+    src: index.php.j2
+    dest: "{{ lemp_site_root }}/index.php"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: nginx PHP yapilandirmasini olustur
+  template:
+    src: lemp.conf.j2
+    dest: /etc/nginx/sites-available/default
+    mode: '0644'
+  notify: nginx yeniden yukle
+
+- name: PHP-FPM servisini baslat
+  service:
+    name: "php{{ lemp_php_version }}-fpm"
+    state: started
+    enabled: yes
