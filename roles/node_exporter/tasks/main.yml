@@ -1,0 +1,57 @@
+---
+- name: Servis kullanicisi olustur
+  user:
+    name: "{{ node_exporter_user }}"
+    system: yes
+    shell: /usr/sbin/nologin
+    create_home: no
+
+- name: Node exporter indir
+  unarchive:
+    src: "https://github.com/prometheus/node_exporter/releases/download/v{{ node_exporter_version }}/node_exporter-{{ node_exporter_version }}.linux-amd64.tar.gz"
+    dest: /tmp
+    remote_src: yes
+    creates: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64"
+
+- name: Calistirilabilir dosyayi yerlestir
+  copy:
+    src: "/tmp/node_exporter-{{ node_exporter_version }}.linux-amd64/node_exporter"
+    dest: /usr/local/bin/node_exporter
+    remote_src: yes
+    owner: root
+    group: root
+    mode: '0755'
+  notify: node exporter yeniden baslat
+
+- name: Systemd servis dosyasini olustur
+  copy:
+    dest: /etc/systemd/system/node_exporter.service
+    mode: '0644'
+    content: |
+      [Unit]
+      Description=Prometheus Node Exporter
+      After=network-online.target
+
+      [Service]
+      User={{ node_exporter_user }}
+      Group={{ node_exporter_user }}
+      Type=simple
+      ExecStart=/usr/local/bin/node_exporter --web.listen-address=:{{ node_exporter_port }}
+      Restart=on-failure
+
+      [Install]
+      WantedBy=multi-user.target
+  notify: node exporter yeniden baslat
+
+- name: Servisi baslat ve aktif et
+  systemd:
+    name: node_exporter
+    state: started
+    enabled: yes
+    daemon_reload: yes
+
+- name: Metrik portuna izin ver
+  ufw:
+    rule: allow
+    port: "{{ node_exporter_port }}"
+    proto: tcp

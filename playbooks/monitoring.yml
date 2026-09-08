@@ -1,0 +1,7 @@
+---
+- name: Sunuculara izleme ajani kur
+  hosts: servers
+  become: yes
+  roles:
+    - common
+    - node_exporter

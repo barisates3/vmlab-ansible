@@ -1,0 +1,6 @@
+---
+- name: node exporter yeniden baslat
+  systemd:
+    name: node_exporter
+    state: restarted
+    daemon_reload: yes
